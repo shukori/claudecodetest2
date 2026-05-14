@@ -34,7 +34,6 @@ h1 {
   font-size: 3rem;
   font-weight: bold;
   letter-spacing: 4px;
-  color: #0f3460;
   background: #0a0a23;
   border-radius: 12px;
   padding: 16px;
@@ -127,7 +126,6 @@ input[type="time"]:focus {
   color: #a8dadc;
 }
 
-/* Overlay */
 .alarm-overlay {
   display: none;
   position: fixed;
