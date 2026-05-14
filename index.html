@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>シンプルアラーム</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>アラーム</h1>
+
+    <div class="current-time" id="currentTime">00:00:00</div>
+
+    <div class="alarm-section">
+      <label for="alarmTime">アラーム時刻</label>
+      <input type="time" id="alarmTime" step="60">
+    </div>
+
+    <div class="controls">
+      <button id="setBtn" class="btn btn-primary">アラームをセット</button>
+      <button id="cancelBtn" class="btn btn-secondary" disabled>キャンセル</button>
+    </div>
+
+    <div class="status" id="status">アラームが設定されていません</div>
+
+    <div class="alarm-overlay" id="alarmOverlay">
+      <div class="alarm-popup">
+        <div class="alarm-icon">⏰</div>
+        <p>アラームが鳴っています！</p>
+        <button id="stopBtn" class="btn btn-stop">停止</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

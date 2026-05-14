@@ -1,0 +1,173 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: #1a1a2e;
+  color: #eee;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.container {
+  background: #16213e;
+  border-radius: 20px;
+  padding: 40px;
+  width: 340px;
+  text-align: center;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+h1 {
+  font-size: 1.6rem;
+  margin-bottom: 24px;
+  color: #e94560;
+  letter-spacing: 2px;
+}
+
+.current-time {
+  font-size: 3rem;
+  font-weight: bold;
+  letter-spacing: 4px;
+  color: #0f3460;
+  background: #0a0a23;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 28px;
+  font-variant-numeric: tabular-nums;
+  color: #a8dadc;
+}
+
+.alarm-section {
+  margin-bottom: 24px;
+}
+
+label {
+  display: block;
+  font-size: 0.85rem;
+  color: #aaa;
+  margin-bottom: 8px;
+}
+
+input[type="time"] {
+  width: 100%;
+  padding: 12px;
+  font-size: 1.5rem;
+  border: 2px solid #0f3460;
+  border-radius: 10px;
+  background: #0a0a23;
+  color: #a8dadc;
+  text-align: center;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+input[type="time"]:focus {
+  border-color: #e94560;
+}
+
+.controls {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.btn {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.1s;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: #e94560;
+  color: white;
+}
+
+.btn-secondary {
+  background: #0f3460;
+  color: #a8dadc;
+}
+
+.btn-stop {
+  background: #e94560;
+  color: white;
+  padding: 14px 40px;
+  font-size: 1rem;
+  border-radius: 12px;
+  margin-top: 16px;
+  flex: none;
+}
+
+.status {
+  font-size: 0.85rem;
+  color: #888;
+  min-height: 20px;
+}
+
+.status.active {
+  color: #a8dadc;
+}
+
+/* Overlay */
+.alarm-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+}
+
+.alarm-overlay.show {
+  display: flex;
+  animation: fadeIn 0.3s ease;
+}
+
+.alarm-popup {
+  background: #16213e;
+  border-radius: 20px;
+  padding: 40px;
+  text-align: center;
+  box-shadow: 0 0 40px rgba(233, 69, 96, 0.5);
+  animation: pulse 0.8s infinite alternate;
+}
+
+.alarm-icon {
+  font-size: 4rem;
+  margin-bottom: 12px;
+}
+
+.alarm-popup p {
+  font-size: 1.1rem;
+  color: #eee;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes pulse {
+  from { box-shadow: 0 0 20px rgba(233, 69, 96, 0.4); }
+  to   { box-shadow: 0 0 50px rgba(233, 69, 96, 0.9); }
+}
