@@ -280,7 +280,7 @@ def build_kyushu(rows,hist):
     # 20_集計_事業者別（在総ベース）
     ws=wb.create_sheet("20_集計_事業者別")
     ws["A1"]="九州8県 在宅薬局 事業者別 店舗数（在宅薬学総合体制加算ベース）"; ws["A1"].font=TITLE
-    ws["A2"]="在総店舗数=COUNTIFS(事業者一致 & 在総=1)。広義(在薬)も併記。並びは大手優先＋在総数降順。"; ws["A2"].font=NORM
+    ws["A2"]="在総店舗数=COUNTIFS(事業者一致 & 在総=1)。広義(在薬)も併記。並びは(1)ルール一致=大手優先 (2)同グループ内で在総数降順 (3)ルール未一致は最後。"; ws["A2"].font=NORM
     heads=["順位","正規化事業者名","事業者タイプ","信頼度","在総薬局数","広義(在薬)薬局数","在総シェア"]
     for j,h in enumerate(heads,1): ws.cell(row=4,column=j,value=h)
     style_header(ws,4,len(heads))
@@ -289,9 +289,10 @@ def build_kyushu(rows,hist):
         k=r["corp"]
         if k not in agg: agg[k]=dict(type=r["type"],conf=r["conf"],rid=r["rid"],taisei=0)
         agg[k]["taisei"]+=r["taisei"]
-    # ソート順序: ルール一致（大手優先）→ 在総数降順
+    # ソート順序: (1)ルール一致（大手優先） (2)在総数降順 (3)同数時は信頼度（高>中>自動）
+    conf_rank={"高":0,"中":1,"自動":2}
     order=sorted([(k,v) for k,v in agg.items() if v["taisei"]>0],
-                 key=lambda kv:(kv[1]["rid"]=="-",-kv[1]["taisei"]),reverse=False)
+                 key=lambda kv:(kv[1]["rid"]=="-",-kv[1]["taisei"],conf_rank.get(kv[1]["conf"],3)))
     r=5
     for rank,(corp,info) in enumerate(order,1):
         ws.cell(row=r,column=1,value=rank); ws.cell(row=r,column=2,value=corp)
@@ -376,7 +377,7 @@ def build_fukuoka(rows,hist):
     # 20 全薬局事業者別
     ws=wb.create_sheet("20_集計_全薬局事業者別")
     ws["A1"]="福岡県 事業者別 店舗数（全薬局・在宅フィルタ無）"; ws["A1"].font=TITLE
-    ws["A2"]="店舗数=COUNTIF(正規化事業者)。並びは大手優先＋店舗数降順。"; ws["A2"].font=NORM
+    ws["A2"]="店舗数=COUNTIF(正規化事業者)。並びは(1)ルール一致=大手優先 (2)同グループ内で店舗数降順 (3)ルール未一致は最後。"; ws["A2"].font=NORM
     heads=["順位","正規化事業者名","事業者タイプ","信頼度","店舗数","シェア"]
     for j,h in enumerate(heads,1): ws.cell(row=4,column=j,value=h)
     style_header(ws,4,len(heads))
@@ -385,7 +386,8 @@ def build_fukuoka(rows,hist):
         k=r["corp"]
         if k not in agg: agg[k]=dict(type=r["type"],conf=r["conf"],rid=r["rid"],cnt=0,tai=0)
         agg[k]["cnt"]+=1; agg[k]["tai"]+=r["taisei"]
-    order=sorted(agg.items(),key=lambda kv:(kv[1]["rid"]=="-",-kv[1]["cnt"])); r=5
+    conf_rank={"高":0,"中":1,"自動":2}
+    order=sorted(agg.items(),key=lambda kv:(kv[1]["rid"]=="-",-kv[1]["cnt"],conf_rank.get(kv[1]["conf"],3))); r=5
     for rank,(corp,info) in enumerate(order,1):
         ws.cell(row=r,column=1,value=rank); ws.cell(row=r,column=2,value=corp)
         ws.cell(row=r,column=3,value=info["type"]); ws.cell(row=r,column=4,value=info["conf"])
@@ -404,11 +406,12 @@ def build_fukuoka(rows,hist):
     # 21 在宅事業者別（在総）
     ws=wb.create_sheet("21_集計_在宅事業者別")
     ws["A1"]="福岡県 在宅薬局 事業者別 店舗数（在宅薬学総合体制加算ベース）"; ws["A1"].font=TITLE
-    ws["A2"]="在総店舗数=COUNTIFS(事業者一致 & 在総=1)。法人名寄せにより高精度。"; ws["A2"].font=NORM
+    ws["A2"]="在総店舗数=COUNTIFS(事業者一致 & 在総=1)。法人名寄せにより高精度。並びは(1)ルール一致=大手優先 (2)同グループ内で在総数降順 (3)ルール未一致は最後。"; ws["A2"].font=NORM
     heads=["順位","正規化事業者名","事業者タイプ","信頼度","在総薬局数","広義(在薬)薬局数","在総シェア"]
     for j,h in enumerate(heads,1): ws.cell(row=4,column=j,value=h)
     style_header(ws,4,len(heads))
-    order2=sorted([(k,v) for k,v in agg.items() if v["tai"]>0],key=lambda kv:(kv[1]["rid"]=="-",-kv[1]["tai"])); r=5
+    order2=sorted([(k,v) for k,v in agg.items() if v["tai"]>0],
+                  key=lambda kv:(kv[1]["rid"]=="-",-kv[1]["tai"],conf_rank.get(kv[1]["conf"],3))); r=5
     for rank,(corp,info) in enumerate(order2,1):
         ws.cell(row=r,column=1,value=rank); ws.cell(row=r,column=2,value=corp)
         ws.cell(row=r,column=3,value=info["type"]); ws.cell(row=r,column=4,value=info["conf"])
