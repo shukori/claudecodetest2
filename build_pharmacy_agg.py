@@ -289,7 +289,9 @@ def build_kyushu(rows,hist):
         k=r["corp"]
         if k not in agg: agg[k]=dict(type=r["type"],conf=r["conf"],rid=r["rid"],taisei=0)
         agg[k]["taisei"]+=r["taisei"]
-    order=sorted([(k,v) for k,v in agg.items() if v["taisei"]>0],key=lambda kv:(kv[1]["rid"]=="-",-kv[1]["taisei"]))
+    # ソート順序: ルール一致（大手優先）→ 在総数降順
+    order=sorted([(k,v) for k,v in agg.items() if v["taisei"]>0],
+                 key=lambda kv:(kv[1]["rid"]=="-",-kv[1]["taisei"]),reverse=False)
     r=5
     for rank,(corp,info) in enumerate(order,1):
         ws.cell(row=r,column=1,value=rank); ws.cell(row=r,column=2,value=corp)
